@@ -7,7 +7,7 @@ export class BaseEntity {
     id!: string
 
     @Column({
-        name: "deleted",
+        name: "is_deleted",
         type: "boolean",
         default: false
     })
