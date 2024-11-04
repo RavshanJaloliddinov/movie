@@ -1,0 +1,1 @@
+export {GenreRepository} from "./genre.repository"

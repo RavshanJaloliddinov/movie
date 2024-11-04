@@ -1,0 +1,1 @@
+export {GenreEntity} from "./genre.entity"
