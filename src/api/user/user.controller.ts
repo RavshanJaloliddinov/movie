@@ -6,7 +6,7 @@ import { UserEntity } from 'src/core/entity/user.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
 import { UserRoles } from 'src/common/database/Enums';
 import { Protected } from 'src/common/decorator/protected.decorator';
-import { Roles } from 'src/common/decorator/role.decarator';
+import { Roles } from 'src/api/auth/roles/RolesDecorator';
 
 @ApiTags('Users') // API guruhini belgilash
 @Controller('users')

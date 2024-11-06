@@ -6,12 +6,11 @@ import { UserRoles } from "src/common/database/Enums";
 import { config } from "src/config";
 import { UserEntity } from "src/core/entity/user.entity";
 import { UserRepository } from "src/core/repository/user.repository";
-import { RedisService } from "../redis/redis.service";
+import { RedisService } from "../../common/redis/redis.service";
 
 @Injectable()
 export class MailService {
     private transporter;
-
 
     constructor(
         private redisService: RedisService,
@@ -43,7 +42,10 @@ export class MailService {
     async generateJwt(email: string, role: UserRoles) {
         const accessToken = this.jwtService.sign(
             { email, role },
-            { expiresIn: config.ACCESS_TOKEN_EXPIRE_TIME }
+            {
+                expiresIn: config.ACCESS_TOKEN_EXPIRE_TIME,
+                secret: config.ACCESS_TOKEN_SECRET_KEY
+            }
         );
 
         await this.redisService.setValue({
@@ -54,7 +56,10 @@ export class MailService {
 
         const refreshToken = this.jwtService.sign(
             { email, role },
-            { expiresIn: config.REFRESH_TOKEN_EXPIRE_TIME }
+            { 
+                expiresIn: config.REFRESH_TOKEN_EXPIRE_TIME,
+                secret: config.REFRESH_TOKEN_SECRET_KEY
+            }
         );
 
         await this.redisService.setValue({
@@ -62,8 +67,6 @@ export class MailService {
             value: refreshToken,
             expireTime: Number(config.REFRESH_TOKEN_EXPIRE_TIME),
         });
-        return {accessToken, refreshToken}
+        return { accessToken, refreshToken }
     }
-
-    
 }

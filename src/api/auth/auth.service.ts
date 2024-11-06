@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
-import { RedisService } from "src/api/redis/redis.service";
+import { RedisService } from "src/common/redis/redis.service";
 import { UserEntity } from "src/core/entity/user.entity";
 import { UserRepository } from "src/core/repository/user.repository";
 import { CheckOtpDto, CreateOtpDto, RegisterDto } from "./dto/auth.dto";
@@ -13,7 +13,6 @@ import { MailService } from "./mail.service";
 export class AuthService {
   constructor(
     private redisService: RedisService,
-    private jwtService: JwtService,
     private mailService: MailService,
     @InjectRepository(UserEntity) private usersRepository: UserRepository
   ) { }
