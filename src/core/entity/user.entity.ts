@@ -1,41 +1,44 @@
 import { Column, Entity } from "typeorm";
-
-import { Roles } from "src/common/database/Enums";
+import { UserRoles } from "src/common/database/Enums"; 
 import { BaseEntity } from "src/common/database/BaseEntity";
 
-Entity("users")
+@Entity("users")
 export class UserEntity extends BaseEntity {
 
     @Column({
         type: "varchar",
         name: "name",
+        nullable: false, 
     })
-    name!: string
+    name!: string;
 
     @Column({
         type: "varchar",
         name: "email",
+        unique: true, 
+        nullable: false,
     })
-    email!: string
+    email!: string;
 
     @Column({
-        type: "varchar",
+        type: "boolean", 
         name: "is_premium",
-        default: false
+        default: false,
     })
-    is_premium: boolean
+    is_premium: boolean;
 
     @Column({
-        type: "date",
+        type: "timestamp", 
         name: "last_login",
-        default: Date.now,
+        default: () => "CURRENT_TIMESTAMP", 
     })
-    last_login: Date
+    last_login: Date;
 
     @Column({
         type: "enum",
         name: "role",
-        default: "USER"
+        enum: UserRoles,
+        default: UserRoles.USER, 
     })
-    role: Roles
+    role: UserRoles;
 }

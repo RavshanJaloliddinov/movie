@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsBoolean, IsDate, IsEnum, IsOptional, IsNotEmpty } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";  // Swagger import qilindi
-import { Roles } from "src/common/database/Enums";
+import { UserRoles } from "src/common/database/Enums";
 
 export class CreateUserDto {
     
@@ -40,10 +40,10 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: "User's role in the system",
-        example: Roles.USER, // Enum qiymatidan foydalaniladi
-        enum: Roles,
+        example: UserRoles.USER, // Enum qiymatidan foydalaniladi
+        enum: UserRoles,
         required: false
     })
-    @IsEnum(Roles)
-    role!: Roles;
+    @IsEnum(UserRoles)
+    role!: UserRoles;
 }

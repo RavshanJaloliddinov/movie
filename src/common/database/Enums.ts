@@ -1,6 +1,6 @@
 
 
-enum Roles {
+enum UserRoles {
     SUPER_ADMIN = "super_admin",
     ADMIN = "admin",
     USER = "user",
@@ -11,4 +11,4 @@ enum Language {
     ENG = "eng",
 }
 
-export { Roles, Language }
+export { UserRoles, Language }
