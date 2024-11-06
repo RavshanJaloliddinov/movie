@@ -8,6 +8,12 @@ import { config } from 'src/config';
 import { UploadModule } from './file/file.module';
 import { RedisService } from 'nestjs-redis';
 import { AuthModule } from './auth/auth.module';
+import { GenreModule } from './genre/genre.module';
+import { MovieModule } from './movie/movie.module';
+import { MovieGenreModule } from './movie_genre/movie_genre.module';
+import { ActorModule } from './actor/actor.module';
+import { MovieActorModule } from './movie_actor/movie_actor.module';
+
 
 @Module({
   imports: [
@@ -17,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
       entities: ["dist/core/entity/*.entity{.ts,.js}"],
       synchronize: true,
     }),
+
     RedisModule.forRoot({
       type: "single",
       options: {
@@ -31,6 +38,12 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     UploadModule,
     AuthModule,
+    UserModule,
+    GenreModule,
+    MovieModule,
+    MovieGenreModule,
+    ActorModule,
+    MovieActorModule,
   ],
   
 })
