@@ -9,6 +9,7 @@ export default class Application {
   public static async main(): Promise<void> {
     const app = await NestFactory.create(AppModule);
 
+
     app.setGlobalPrefix("api/v1");
     app.useGlobalPipes(new ValidationPipe())
     // Swagger documentation
@@ -33,4 +34,5 @@ export default class Application {
       console.log(`Server running on ${config.PORT} port`);
     });
   }
+
 }
