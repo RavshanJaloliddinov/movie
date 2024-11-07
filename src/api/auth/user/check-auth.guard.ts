@@ -16,7 +16,7 @@ import { config } from 'src/config';
 
 
 export declare interface RequestInterface extends Request {
-    userId: number | undefined;
+    email: string | undefined;
     role: string | undefined
 }
 
@@ -33,9 +33,10 @@ export class CheckAuthGuard implements CanActivate {
         const isProtected = this.reflector.get<boolean>(Protected, context.getHandler());
 
         if (!isProtected) {
-            request.role = UserRoles.USER;
+            request.role = UserRoles.USER || UserRoles.ADMIN
             return true;
         }
+        console.log(request.headers)
 
         const bearerToken = request.headers['authorization'];
         if (!bearerToken || !bearerToken.startsWith('Bearer ')) {
@@ -44,10 +45,11 @@ export class CheckAuthGuard implements CanActivate {
 
         const token = bearerToken.split(' ')[1];
         const secretKey = config.ACCESS_TOKEN_SECRET_KEY;
+        
 
         try {
             const userDecodedData = this.jwtService.verify(token, { secret: secretKey });
-            request.userId = userDecodedData.id; // userId olish
+            request.email = userDecodedData.email; // email olish
             request.role = userDecodedData.role; // role olish
         } catch (error) {
             if (error instanceof TokenExpiredError) {

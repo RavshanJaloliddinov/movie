@@ -1,58 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Actor } from 'src/core/entity';
-import { ActorRepository } from 'src/core/repository';
-import { CreateActorDto, UpdateActorDto } from './dto';
+import { ActorEntity } from 'src/core/entity/actor.entity';
+import { MovieEntity } from 'src/core/entity/movie.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ActorService {
-  constructor(@InjectRepository(Actor) private actorRepo: ActorRepository) {}
+  constructor(
+    @InjectRepository(ActorEntity)
+    private readonly actorRepository: Repository<ActorEntity>,
+    @InjectRepository(MovieEntity)
+    private readonly movieRepository: Repository<MovieEntity>,
+  ) {}
 
-  async create(createActorDto: CreateActorDto) {
-    const newActor = this.actorRepo.create({
-      name: createActorDto.name,
-      biography: createActorDto.biography,
-    });
-
-    await this.actorRepo.save(newActor);
-    return newActor;
+  async createActor(name: string, biography: string): Promise<ActorEntity> {
+    const actor = this.actorRepository.create({ name, biography });
+    return this.actorRepository.save(actor);
   }
 
-  async findAll(): Promise<Actor[]> {
-    return await this.actorRepo.find();
+  async getActors(): Promise<ActorEntity[]> {
+    return this.actorRepository.find({ relations: ['movies'] });
   }
 
-  async findOne(id: string): Promise<Actor | null> {
-    const foundedActor = this.actorRepo.findOne({ where: { id } });
-
-    if (!foundedActor) {
-      throw new NotFoundException('Actor not found');
-    }
-    return foundedActor;
-  }
-
-  async update(id: string, updateActorDto: UpdateActorDto) {
-    const foundedActor = this.findOne(id);
-
-    if (!foundedActor) {
-      throw new NotFoundException('Actor not found');
-    }
-
-    return await this.actorRepo.update(
-      { id: id },
-      {
-        name: updateActorDto.name,
-        biography: updateActorDto.biography,
-      },
-    );
-  }
-
-  async remove(id: string) {
-    const foundedActor = this.findOne(id)
-
-    if(!foundedActor){
-        throw new NotFoundException('Actor not found')
-    }
-    return await this.actorRepo.delete({id})
+  async addActorToMovie(actorId: string, movieId: string): Promise<ActorEntity> {
+    const actor = await this.actorRepository.findOneOrFail({ where: { id: actorId }, relations: ['movies'] });
+    const movie = await this.movieRepository.findOneOrFail({ where: { id: movieId } });
+    actor.movies.push(movie);
+    return this.actorRepository.save(actor);
   }
 }

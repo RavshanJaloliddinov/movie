@@ -14,6 +14,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Protected(true)
+  @Roles([UserRoles.ADMIN, UserRoles.USER])
   @ApiOperation({ summary: 'Create a user' }) // Amal haqida ma'lumot
   @ApiResponse({ status: 201, description: 'User created successfully', type: UserEntity }) // Muvaffaqiyatli yaratilgan foydalanuvchi haqida ma'lumot
   async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -22,7 +24,7 @@ export class UserController {
 
   @Get()
   @Protected(true)
-  @Roles([UserRoles.ADMIN, UserRoles.USER])
+  @Roles([UserRoles.ADMIN])
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users', type: [UserEntity] }) // Barcha foydalanuvchilarni olish haqida ma'lumot
@@ -31,6 +33,8 @@ export class UserController {
   }
 
   @Get(':id')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' })
   @ApiResponse({ status: 200, description: 'Return a user', type: UserEntity }) 
@@ -40,6 +44,8 @@ export class UserController {
   }
 
   @Put(':id')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' })
   @ApiResponse({ status: 200, description: 'User updated successfully', type: UserEntity })
@@ -51,6 +57,8 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Delete a user' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' })
   @ApiResponse({ status: 204, description: 'User deleted successfully' })

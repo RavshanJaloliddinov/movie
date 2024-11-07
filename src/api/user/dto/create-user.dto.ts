@@ -46,4 +46,6 @@ export class CreateUserDto {
     })
     @IsEnum(UserRoles)
     role!: UserRoles;
+
+    
 }

@@ -4,11 +4,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/core/entity/user.entity';
 import { UserRepository } from 'src/core/repository/user.repository';
+import { MovieEntity } from 'src/core/entity';
+import { MovieRepository } from 'src/core/repository';
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(UserEntity) private readonly userRepo: UserRepository) {}
+  constructor(
+    @InjectRepository(UserEntity) private readonly userRepo: UserRepository,
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepo.create(createUserDto);
@@ -37,4 +41,25 @@ export class UserService {
     const user = await this.findOne(id);
     await this.userRepo.remove(user);
   }
+
+  // async addFavoriteMovie(userId: string, movieId: string): Promise<UserEntity> {
+  //   // Foydalanuvchini topish
+  //   const user = await this.userRepo.findOne({
+  //     where: { id: userId },
+  //     relations: ['favoriteMovies'], // favoriteMoviesni yuklash
+  //   });
+  //   if (!user) {
+  //     throw new NotFoundException('User not found');
+  //   }
+
+  //   // Filmni topish
+  //   const movie = await this.movieRepo.findOne({ where: { id: movieId } });
+  //   if (!movie) {
+  //     throw new NotFoundException('Movie not found');
+  //   }
+
+  //   // Sevimli filmlar arrayiga qo'shish
+  //   user.favoriteMovies.push(movie);
+  //   return await this.userRepo.save(user); // Yangilangan userni saqlash
+  // }
 }
