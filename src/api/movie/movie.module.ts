@@ -1,12 +1,18 @@
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { Movie } from "src/core/entity";
-import { MovieController } from "./movie.controller";
-import { MovieService } from "./movie.service";
+import { Module } from '@nestjs/common';
+import { MovieController } from './movie.controller';
+import { MovieService } from './movie.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MovieEntity } from 'src/core/entity/movie.entity';
+import { GenreEntity } from 'src/core/entity/genre.entity';
+import { ActorEntity } from 'src/core/entity/actor.entity';
+import { MulterModule } from '@nestjs/platform-express'; // Multer fayl yuklashni qo'llab-quvvatlash uchun
+import { UploadService } from '../file/file.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Movie])],
-    controllers: [MovieController],
-    providers: [MovieService]
+  imports: [
+    TypeOrmModule.forFeature([MovieEntity, GenreEntity, ActorEntity]), // Entitylarni qo'shish
+  ],
+  controllers: [MovieController],
+  providers: [MovieService, UploadService], // Xizmatlar
 })
-export class MovieModule{}
+export class MovieModule {}

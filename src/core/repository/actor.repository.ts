@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
-import { Actor } from "../entity";
+import { ActorEntity } from "../entity/actor.entity";
 
-export type ActorRepository = Repository<Actor>
+
+export type ActorRepository = Repository<ActorEntity>

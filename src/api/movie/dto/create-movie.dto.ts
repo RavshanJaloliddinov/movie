@@ -1,31 +1,59 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMovieDto {
-    @IsNotEmpty()
-    @IsString()
-    name!: string
+  @ApiProperty({
+    description: 'Title of the movie',
+    example: 'Inception',
+    required: false,  
+  })
+  @IsString()
+  @IsOptional()
+  title: string;
 
-    @IsNotEmpty()
-    @IsString()
-    video!: string
+  @ApiProperty({
+    description: 'Video file of the movie',
+    type: 'string',
+    format: 'binary', 
+    example: 'movie.mp4',
+    required: false, 
+  })
+  @IsNotEmpty()
+  video: Express.Multer.File;
 
-    @IsNotEmpty()
-    @IsNumber()
-    rating!: number
+  @ApiProperty({
+    description: 'Rating of the movie',
+    example: 8.8,
+    required: false,  
+  })
+  @IsNumber()
+  @IsOptional()
+  rating: number;
 
-    @IsNotEmpty()
-    @IsString()
-    title!: string
+  @ApiProperty({
+    description: 'Release date of the movie',
+    example: '2010-07-16T00:00:00.000Z', 
+    required: false, 
+  })
+  @IsDate()
+  @IsOptional()
+  release_date: Date;
 
-    @IsNotEmpty()
-    @IsString()
-    description!: string
+  @ApiProperty({
+    description: 'Is the movie a premium movie?',
+    example: true,
+    required: false, 
+  })
+  @IsBoolean()
+  @IsOptional()
+  is_premium: boolean;
 
-    @IsNotEmpty()
-    @IsDate()
-    release_date!: Date
-
-    @IsNotEmpty()
-    @IsBoolean()
-    is_premium!:boolean
+  @ApiProperty({
+    description: 'Description of the movie',
+    example: 'A skilled thief is given a chance at redemption if he can successfully perform an inception: planting an idea into a target\'s subconscious.',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  description: string;
 }
