@@ -1,6 +1,6 @@
-export { GenreRepository } from './genre.repository';
-export { MovieRepository } from './movie.repository';
-export { MovieGenreRepository } from './movie_genre.entity';
-export { ActorRepository } from './actor.repository';
-export { MovieActorRepository } from './movie_actor.repository';
-export {ReviewRepository} from "./review.repository"
+export * from './actor.repository'
+export * from './file.repository'
+export * from './genre.repository'
+export * from './movie.repository'
+export * from './user.repository'
+

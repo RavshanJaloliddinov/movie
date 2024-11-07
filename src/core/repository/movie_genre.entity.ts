@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
-import { MovieGenre } from "../entity";
+// import { Repository } from "typeorm";
+// import { MovieGenre } from "../entity";
 
-export type MovieGenreRepository = Repository<MovieGenre>
+// export type MovieGenreRepository = Repository<MovieGenre>

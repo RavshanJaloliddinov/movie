@@ -1,9 +1,6 @@
 import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateMovieDto {
-    @IsOptional()
-    @IsString()
-    name: string
 
     @IsOptional()
     @IsString()

@@ -1,45 +1,51 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { ActorService } from './actor.service';
-import { CreateActorDto, UpdateActorDto } from './dto';
+import { ActorEntity } from 'src/core/entity/actor.entity';
+import { UserRoles } from 'src/common/database/Enums';
+import { Protected } from 'src/common/decorator/protected.decorator';
+import { Roles } from '../auth/roles/RolesDecorator';
 
-@Controller('/actor')
+@ApiTags('Actors')
+@Controller('actors')
 export class ActorController {
-  constructor(private readonly actorService: ActorService) {}
+  constructor(private readonly actorService: ActorService) { }
 
-  @Post('/add')
-  async create(@Body() createActorDto: CreateActorDto) {
-    return await this.actorService.create(createActorDto);
+  @Post()
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Yangi aktor qo\'shish' })
+  @ApiBody({ schema: { example: { name: 'Actor Name', biography: 'Biography of the actor' } }, description: 'Aktor haqida ma\'lumotlar' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Aktor muvaffaqiyatli qo\'shildi.', type: ActorEntity })
+  async createActor(
+    @Body('name') name: string,
+    @Body('biography') biography: string,
+  ): Promise<ActorEntity> {
+    return this.actorService.createActor(name, biography);
   }
 
-  @Get('/all')
-  async findAll() {
-    return await this.actorService.findAll();
+  @Get()
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
+  @ApiOperation({ summary: 'Barcha aktorlarni olish' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Aktorlar ro\'yxati qaytarildi.', type: [ActorEntity] })
+  async getActors(): Promise<ActorEntity[]> {
+    return this.actorService.getActors();
   }
 
-  @Get('/:id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return await this.actorService.findOne(id);
-  }
-
-  @Patch('/update/:id')
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateActorDto: UpdateActorDto,
-  ) {
-    return await this.actorService.update(id,updateActorDto)
-  }
-
-  @Delete('/delete/:id')
-  async delete(@Param('id',ParseUUIDPipe) id: string){
-    return await this.actorService.remove(id);
+  @Post(':actorId/movies/:movieId')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN])
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Aktorni filmga bog\'lash' })
+  @ApiParam({ name: 'actorId', type: 'string', description: 'Aktor IDsi' })
+  @ApiParam({ name: 'movieId', type: 'string', description: 'Film IDsi' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Aktor muvaffaqiyatli filmga bog\'landi.', type: ActorEntity })
+  async addActorToMovie(
+    @Param('actorId') actorId: string,
+    @Param('movieId') movieId: string,
+  ): Promise<ActorEntity> {
+    return this.actorService.addActorToMovie(actorId, movieId);
   }
 }
