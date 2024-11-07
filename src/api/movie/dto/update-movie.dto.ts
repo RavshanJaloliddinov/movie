@@ -1,31 +1,31 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateMovieDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     name: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     video: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     rating: number
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     title: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     description: string
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsDate()
     release_date: Date
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsBoolean()
     is_premium:boolean
 

@@ -1,7 +1,7 @@
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { IsOptional, IsPositive, IsString } from "class-validator";
 
 export class UpdateGenreDto{
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     genre_name: string
 }

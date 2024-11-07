@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { config } from 'src/config';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 
 export default class Application {
@@ -9,6 +10,8 @@ export default class Application {
         const app = await NestFactory.create(AppModule);
 
         app.setGlobalPrefix("api/v1");
+        // Global validation
+        app.useGlobalPipes(new ValidationPipe)
       
         // Swagger documentation
         const swaggerConfig = new DocumentBuilder()

@@ -8,6 +8,8 @@ import { MovieModule } from './movie/movie.module';
 import { MovieGenreModule } from './movie_genre/movie_genre.module';
 import { ActorModule } from './actor/actor.module';
 import { MovieActorModule } from './movie_actor/movie_actor.module';
+import { ReviewModule } from './review/review.module';
+import { FavouriteMovieModule } from './favourite_movie/favourite_movie.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { MovieActorModule } from './movie_actor/movie_actor.module';
     MovieGenreModule,
     ActorModule,
     MovieActorModule,
+    ReviewModule,
+    FavouriteMovieModule,
   ],
 })
 export class AppModule { }
