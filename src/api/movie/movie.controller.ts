@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { MovieService } from './movie.service';
 import { CreateMovieDto, UpdateMovieDto } from './dto';
-import { ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MovieEntity } from 'src/core/entity/movie.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Protected } from 'src/common/decorator/protected.decorator';
@@ -20,6 +20,7 @@ import { Roles } from '../auth/roles/RolesDecorator';
 import { UserRoles } from 'src/common/database/Enums';
 
 @ApiTags('Movies')
+@ApiBearerAuth('auth')
 @Controller('/movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}

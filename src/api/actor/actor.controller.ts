@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { ActorService } from './actor.service';
 import { ActorEntity } from 'src/core/entity/actor.entity';
 import { UserRoles } from 'src/common/database/Enums';
@@ -8,6 +8,8 @@ import { Roles } from '../auth/roles/RolesDecorator';
 
 @ApiTags('Actors')
 @Controller('actors')
+@ApiBearerAuth()
+
 export class ActorController {
   constructor(private readonly actorService: ActorService) { }
 

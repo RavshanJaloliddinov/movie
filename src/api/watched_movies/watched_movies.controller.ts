@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { WatchedMovieService } from './watched_movies.service';
 import { WatchedMovieEntity } from 'src/core/entity/watched_movie.entity';
 import { UserRoles } from 'src/common/database/Enums';
@@ -8,14 +8,16 @@ import { Protected } from 'src/common/decorator/protected.decorator';
 
 @ApiTags('Watched Movies')
 @Controller('watched-movies')
+@ApiBearerAuth('auth')
+
 export class WatchedMovieController {
-  constructor(private readonly watchedMovieService: WatchedMovieService) {}
+  constructor(private readonly watchedMovieService: WatchedMovieService) { }
 
   @Post(':movieId')
-  @Protected(true)
-  @Roles([UserRoles.ADMIN])
+
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Ko\'rilgan film qo\'shish' })
+  @Protected(true)
+  @Roles([UserRoles.ADMIN]) @ApiOperation({ summary: 'Ko\'rilgan film qo\'shish' })
   @ApiParam({ name: 'movieId', type: 'string', description: 'Ko\'rilgan filmning IDsi' })
   @ApiBody({ schema: { example: { userId: 'user123' } }, description: 'Foydalanuvchi IDsi' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Ko\'rilgan film muvaffaqiyatli qo\'shildi.', type: WatchedMovieEntity })

@@ -1,19 +1,21 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from "@nestjs/common";
 import { GenreService } from "./genre.service";
 import { CreateGenreDto, UpdateGenreDto } from "./dto";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { GenreEntity } from "src/core/entity";
 import { UserRoles } from "src/common/database/Enums";
 import { Roles } from "../auth/roles/RolesDecorator";
 import { Protected } from "src/common/decorator/protected.decorator";
 
 @Controller('/genre')
+@ApiBearerAuth('auth')
+
 export class GenreController {
     constructor(private readonly genreService: GenreService) { }
 
     @Post('/add')
     @Protected(true)
-    @Roles([UserRoles.ADMIN])
+    @Roles([UserRoles.ADMIN, UserRoles.USER])
     @ApiOperation({ summary: 'Add a new genre' })
     @ApiResponse({
         status: 201,
@@ -26,7 +28,7 @@ export class GenreController {
 
     @Get('/all')
     @Protected(true)
-    @Roles([UserRoles.ADMIN])
+    @Roles([UserRoles.ADMIN, UserRoles.USER])
     @ApiOperation({ summary: 'Get all genres' })
     @ApiResponse({
         status: 200,

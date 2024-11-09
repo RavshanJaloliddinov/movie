@@ -23,6 +23,10 @@ export class UserService {
     return await this.userRepo.find();
   }
 
+  async findByEmail(email: string): Promise<UserEntity> {
+    return await this.userRepo.findOne({ where: { email } })
+  }
+
   async findOne(id: string): Promise<UserEntity> {  // id ni string formatga o'zgartirdik
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {

@@ -1,15 +1,15 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CheckOtpDto, CreateOtpDto, RegisterDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { stringify } from 'querystring';
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtService: JwtService,
   ) { }
 
   @Post('login')
@@ -22,8 +22,8 @@ export class AuthController {
   @Post('check-otp')
   @ApiOperation({ summary: 'Check OTP for login' })
   @ApiResponse({ status: 200, description: 'OTP is valid' })
-  async checkOtp(@Body() checkOtpDto: CheckOtpDto) {
-    return await this.authService.checkOtp(checkOtpDto);
+  async checkOtp(@Body() checkOtpDto: CheckOtpDto, @Req() req) {
+    return await this.authService.checkOtp(checkOtpDto, req);
   }
 
   @Post('register')

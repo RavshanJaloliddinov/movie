@@ -1,14 +1,20 @@
 import { Controller, Post, Get, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { FavoriteMovieService } from './favorite_movies.service';
 import { FavoriteMovieEntity } from 'src/core/entity/favorite_movie.entity';
+import { UserRoles } from 'src/common/database/Enums';
+import { Roles } from '../auth/roles/RolesDecorator';
+import { Protected } from 'src/common/decorator/protected.decorator';
 
 @ApiTags('Favorite Movies')
 @Controller('favorite-movies')
+@ApiBearerAuth('auth')
 export class FavoriteMovieController {
-  constructor(private readonly favoriteMovieService: FavoriteMovieService) {}
+  constructor(private readonly favoriteMovieService: FavoriteMovieService) { }
 
   @Post(':movieId')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN, UserRoles.USER])
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Sevimli film qo\'shish' })
   @ApiParam({ name: 'movieId', type: 'string', description: 'Sevimli bo\'lgan filmning IDsi' })
@@ -19,6 +25,8 @@ export class FavoriteMovieController {
   }
 
   @Get(':userId')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN, UserRoles.USER])
   @ApiOperation({ summary: 'Foydalanuvchining sevimli filmlarini olish' })
   @ApiParam({ name: 'userId', type: 'string', description: 'Foydalanuvchi IDsi' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Sevimli filmlar ro\'yxati qaytarildi.', type: [FavoriteMovieEntity] })
@@ -27,6 +35,8 @@ export class FavoriteMovieController {
   }
 
   @Delete(':userId/:movieId')
+  @Protected(true)
+  @Roles([UserRoles.ADMIN, UserRoles.USER])
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Sevimli filmni o\'chirish' })
   @ApiParam({ name: 'userId', type: 'string', description: 'Foydalanuvchi IDsi' })

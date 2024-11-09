@@ -10,6 +10,7 @@ import { Roles } from 'src/api/auth/roles/RolesDecorator';
 
 @ApiTags('Users') // API guruhini belgilash
 @Controller('users')
+@ApiBearerAuth('auth')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -24,8 +25,7 @@ export class UserController {
 
   @Get()
   @Protected(true)
-  @Roles([UserRoles.ADMIN])
-  @ApiBearerAuth()
+  @Roles([UserRoles.ADMIN, UserRoles.USER])
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users', type: [UserEntity] }) // Barcha foydalanuvchilarni olish haqida ma'lumot
   async findAll(): Promise<UserEntity[]> {

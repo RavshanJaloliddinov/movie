@@ -1,21 +1,20 @@
-import { Injectable, ConflictException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { Injectable, ConflictException, Req } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { RedisService } from "src/common/redis/redis.service";
 import { UserEntity } from "src/core/entity/user.entity";
 import { UserRepository } from "src/core/repository/user.repository";
 import { CheckOtpDto, CreateOtpDto, RegisterDto } from "./dto/auth.dto";
-import { config } from "src/config";
 import { MailService } from "./mail.service";
-
+import { DeviceService } from "./device/device.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private redisService: RedisService,
     private mailService: MailService,
+    private deviceService: DeviceService,
     @InjectRepository(UserEntity) private usersRepository: UserRepository
-  ) { }
+  ) {}
 
   // Foydalanuvchini kirish uchun email orqali tekshirish
   async login(createOtpDto: CreateOtpDto) {
@@ -35,7 +34,7 @@ export class AuthService {
       value: otp,
       expireTime: 120, // 2 daqiqa
     });
-    this.mailService.sendOtp(createOtpDto.email, otp)
+    await this.mailService.sendOtp(createOtpDto.email, otp);
 
     // Muvaffaqiyatli kirish xabari va OTP ni qaytarish
     return {
@@ -43,7 +42,6 @@ export class AuthService {
       otp,
     };
   }
-
 
   // Yangi foydalanuvchini ro'yxatdan o'tkazish
   async register(registerDto: RegisterDto) {
@@ -59,7 +57,7 @@ export class AuthService {
     // Yangi foydalanuvchini yaratish
     const newUser = this.usersRepository.create({
       email: registerDto.email,
-      name: registerDto.name
+      name: registerDto.name,
     });
 
     await this.usersRepository.save(newUser); // Yangi foydalanuvchini saqlash
@@ -72,7 +70,7 @@ export class AuthService {
     });
 
     // OTP ni foydalanuvchiga yuborish
-    this.mailService.sendOtp(registerDto.email, otp);
+    await this.mailService.sendOtp(registerDto.email, otp);
 
     // Ro'yxatdan o'tish muvaffaqiyatli bo'lsa, OTP qaytarish
     return {
@@ -86,9 +84,8 @@ export class AuthService {
     return Math.floor(100000 + Math.random() * 900000); // 6 xonali OTP
   }
 
-
   // OTP ni tekshirish
-  async checkOtp(checkOtpDto: CheckOtpDto) {
+  async checkOtp(checkOtpDto: CheckOtpDto,  req: Request) {
     const user = await this.usersRepository.findOne({ where: { email: checkOtpDto.email } });
 
     const storeOtp = await this.redisService.getValue(`otp-${user.id}`); // Redisdan saqlangan OTP ni olish
@@ -97,14 +94,34 @@ export class AuthService {
       throw new ConflictException("Noto'g'ri OTP");
     }
 
+    const userId = user.id
+    const userAgent = req.headers['user-agent'];
+    await this.deviceService.saveDeviceInfo(userId, userAgent);
+
+
     // JWT token yaratish va uni qaytarish
-    const { accessToken, refreshToken } = await this.mailService.generateJwt(user.email, user.role)
+    const { accessToken, refreshToken } = await this.mailService.generateJwt(user.email, user.role);
     return {
       message: "login successfully",
       accessToken,
       refreshToken,
     };
-    
   }
 
+  // // Google OAuth bilan avtorizatsiya
+  // async googleAuth(req: any) {
+  //   let user = await this.userService.findByEmail(req.user.email);
+  //   let newUser = null;
+
+  //   if (!user) {
+  //     newUser = await this.userService.create({
+  //       email: req.user.email,
+  //       name: req.user.displayName,
+  //     });
+  //     user = newUser;
+  //   }
+
+  //   const tokens = await this.mailService.generateJwt(user.email, user.role);
+  //   return tokens;
+  // }
 }

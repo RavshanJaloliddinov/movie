@@ -22,7 +22,7 @@ export default class Application {
           scheme: 'bearer',
           bearerFormat: 'JWT' 
         },
-        'access-token', 
+        'auth', 
       )      
       .build()
     const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig)

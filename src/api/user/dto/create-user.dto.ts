@@ -44,6 +44,7 @@ export class CreateUserDto {
         enum: UserRoles,
         required: false
     })
+    @IsOptional()
     @IsEnum(UserRoles)
     role!: UserRoles;
 
