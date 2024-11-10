@@ -5,48 +5,48 @@ export class CreateMovieDto {
   @ApiProperty({
     description: 'Title of the movie',
     example: 'Inception',
-    required: false,  
+    required: false,
   })
   @IsString()
   @IsOptional()
-  title: string;
+  title?: string;
 
   @ApiProperty({
     description: 'Video file of the movie',
     type: 'string',
-    format: 'binary', 
+    format: 'binary',
     example: 'movie.mp4',
-    required: false, 
+    required: false,
   })
-  @IsNotEmpty()
-  video: Express.Multer.File;
+  @IsOptional()
+  video?: Express.Multer.File;
 
   @ApiProperty({
     description: 'Rating of the movie',
     example: 8.8,
-    required: false,  
+    required: false,
   })
   @IsNumber()
   @IsOptional()
-  rating: number;
+  rating?: number;
 
   @ApiProperty({
     description: 'Release date of the movie',
-    example: '2010-07-16T00:00:00.000Z', 
-    required: false, 
+    example: '2010-07-16T00:00:00.000Z',
+    required: false,
   })
   @IsDate()
   @IsOptional()
-  release_date: Date;
+  release_date?: Date;
 
   @ApiProperty({
     description: 'Is the movie a premium movie?',
     example: true,
-    required: false, 
+    required: false,
   })
   @IsBoolean()
   @IsOptional()
-  is_premium: boolean;
+  is_premium?: boolean;
 
   @ApiProperty({
     description: 'Description of the movie',
@@ -55,5 +55,5 @@ export class CreateMovieDto {
   })
   @IsString()
   @IsOptional()
-  description: string;
+  description?: string;
 }

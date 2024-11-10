@@ -10,9 +10,9 @@ import { UploadService } from '../file/file.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MovieEntity, GenreEntity, ActorEntity]), // Entitylarni qo'shish
+    TypeOrmModule.forFeature([MovieEntity, GenreEntity, ActorEntity]), 
   ],
   controllers: [MovieController],
-  providers: [MovieService, UploadService], // Xizmatlar
+  providers: [MovieService, UploadService], 
 })
 export class MovieModule {}

@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany } from "typeorm";
 import { UserRoles } from "src/common/database/Enums";
 import { BaseEntity } from "src/common/database/BaseEntity";
-import { MovieEntity } from "./movie.entity";
 import { FavoriteMovieEntity } from "./favorite_movie.entity";
 
 @Entity("users")

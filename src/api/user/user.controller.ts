@@ -12,13 +12,13 @@ import { Roles } from 'src/api/auth/roles/RolesDecorator';
 @Controller('users')
 @ApiBearerAuth('auth')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   @Protected(true)
   @Roles([UserRoles.ADMIN, UserRoles.USER])
   @ApiOperation({ summary: 'Create a user' }) // Amal haqida ma'lumot
-  @ApiResponse({ status: 201, description: 'User created successfully', type: UserEntity }) // Muvaffaqiyatli yaratilgan foydalanuvchi haqida ma'lumot
+  @ApiResponse({ status: 201, description: 'User created successfully', type: CreateUserDto }) // Muvaffaqiyatli yaratilgan foydalanuvchi haqida ma'lumot
   async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.userService.create(createUserDto);
   }
@@ -27,7 +27,7 @@ export class UserController {
   @Protected(true)
   @Roles([UserRoles.ADMIN, UserRoles.USER])
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Return all users', type: [UserEntity] }) // Barcha foydalanuvchilarni olish haqida ma'lumot
+  @ApiResponse({ status: 200, description: 'Return all users', type: [CreateUserDto] })
   async findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
   }
@@ -37,8 +37,8 @@ export class UserController {
   @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'Return a user', type: UserEntity }) 
-  @ApiResponse({ status: 404, description: 'User not found' }) 
+  @ApiResponse({ status: 200, description: 'Return a user', type: CreateUserDto })
+  @ApiResponse({ status: 404, description: 'User not found' })
   async findOne(@Param('id') id: string): Promise<UserEntity> {
     return this.userService.findOne(id);
   }
@@ -48,7 +48,7 @@ export class UserController {
   @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Update a user' })
   @ApiParam({ name: 'id', required: true, description: 'User ID' })
-  @ApiResponse({ status: 200, description: 'User updated successfully', type: UserEntity })
+  @ApiResponse({ status: 200, description: 'User updated successfully', type: CreateUserDto })
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto

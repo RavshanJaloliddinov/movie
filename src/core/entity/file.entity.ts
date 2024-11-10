@@ -1,5 +1,5 @@
 import { BaseEntity } from "src/common/database/BaseEntity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity } from "typeorm";
 
 @Entity("files")
 export class FileEntity extends BaseEntity {

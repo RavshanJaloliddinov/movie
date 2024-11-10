@@ -25,18 +25,18 @@ export class MovieService {
     @InjectRepository(ActorEntity)
     private readonly actorRepository: ActorRepository,
     private readonly uploadService: UploadService,  // Inject the UploadService
-  ) {}
+  ) { }
 
-  async create(createMovieDto: CreateMovieDto, videoFile: Express.Multer.File) {
+  async create(createMovieDto: CreateMovieDto) {
     try {
       // Upload video file using the UploadService
       console.log(1)
       const uploadedFile = await this.uploadService.uploadFile({
-        file: videoFile,
+        file: createMovieDto.video,
         destination: 'uploads/videos', // Specify the directory to save the video
       });
-      
-      
+
+
       const newMovie = this.movieRepo.create({
         video: uploadedFile.file,  // Save the file URL to the 'video' field
         rating: createMovieDto.rating,

@@ -23,12 +23,12 @@ import { UserRoles } from 'src/common/database/Enums';
 @ApiBearerAuth('auth')
 @Controller('/movie')
 export class MovieController {
-  constructor(private readonly movieService: MovieService) {}
+  constructor(private readonly movieService: MovieService) { }
 
-  
+
   @Post('/add')
-  @Protected(true)
-  @Roles([UserRoles.ADMIN])
+  // @Protected(true)
+  // @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Create a new movie' })
   @ApiConsumes('multipart/form-data')
   @ApiResponse({
@@ -39,9 +39,10 @@ export class MovieController {
   @UseInterceptors(FileInterceptor('video')) // 'video' - fayl formda qanday nomlanayotgan bo'lsa
   async create(
     @Body() createMovieDto: CreateMovieDto,
-    @UploadedFile() videoFile: Express.Multer.File, // Video faylni olish
+    @UploadedFile() videoff: Express.Multer.File, // Videoff faylni olish
   ) {
-    return await this.movieService.create(createMovieDto, videoFile);
+    console.log(videoff.filename, videoff.originalname)
+    return await this.movieService.create({ ...createMovieDto, video: videoff });
   }
 
   @Get('/all')

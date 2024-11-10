@@ -1,46 +1,44 @@
 import { BaseEntity } from 'src/common/database/BaseEntity';
-import { Column, Entity, ManyToMany, JoinTable, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToMany, JoinTable, OneToOne } from 'typeorm';
 import { GenreEntity } from './genre.entity';
-import { UserEntity } from './user.entity';
 import { FavoriteMovieEntity } from './favorite_movie.entity';
 import { ActorEntity } from './actor.entity';
-import e from 'express';
-
 
 @Entity('movies')
 export class MovieEntity extends BaseEntity {
-  @Column({ name: "video", type: 'varchar' })
-  video!: string
+  @Column({ name: "video", type: 'varchar', nullable: true })
+  video?: string;
 
   @Column({ name: 'rating', type: 'varchar', nullable: true })
-  rating!: number;
+  rating?: number;
 
   @Column({ name: "title", type: 'varchar', nullable: true })
-  title!: string;
+  title?: string;
 
   @Column({ name: "description", type: 'varchar', nullable: true })
-  description!: string;
+  description?: string;
 
   @Column({ name: 'release_date', type: Date, nullable: true })
-  release_date!: Date;
+  release_date?: Date;
 
-  @Column({ name: "is_premium", type: 'boolean', default: true })
-  is_premium!: boolean;
+  @Column({ name: "is_premium", type: 'boolean', nullable: true, default: true })
+  is_premium?: boolean;
 
-  @ManyToMany(() => GenreEntity, (genre) => genre.movies)
+  @ManyToMany(() => GenreEntity, (genre) => genre.movies, { nullable: true })
   @JoinTable({
-    name: 'movie_genre',  // Bu orqali TypeORM 'movie_genre' jadvalini avtomatik yaratadi
+    name: 'movie_genre',
     joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'genre_id', referencedColumnName: 'id' }
   })
-  genres: GenreEntity[];
+  genres?: GenreEntity[];
+
+  @OneToOne(() => FavoriteMovieEntity, (favoriteMovie) => favoriteMovie.movie, { nullable: true })
+  favoriteMovie?: FavoriteMovieEntity;
+
+  @ManyToMany(() => ActorEntity, (actor) => actor.movies, { nullable: true })
+  actors?: ActorEntity[];а
 
 
-  @OneToOne(() => FavoriteMovieEntity, (favoriteMovie) => favoriteMovie.movie)
-  favoriteMovie!: FavoriteMovieEntity;
-
-  @ManyToMany(() => ActorEntity, (actor) => actor.movies)
-  actors!: ActorEntity[];
   // @ManyToOne(() => UserEntity, user => user.favoriteMovies)
   // user: UserEntity; 
   // @ManyToMany(() => Actor, (actor) => actor.movies) // Actor bilan bog'lanish to'g'rilandi
@@ -51,3 +49,6 @@ export class MovieEntity extends BaseEntity {
   // })
   // actors: Actor[];
 }
+
+
+

@@ -1,5 +1,5 @@
 import { IsString, IsEmail, IsBoolean, IsDate, IsEnum, IsOptional, IsNotEmpty } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";  // Swagger import qilindi
+import { ApiProperty } from "@nestjs/swagger";
 import { UserRoles } from "src/common/database/Enums";
 
 export class CreateUserDto {
@@ -23,7 +23,7 @@ export class CreateUserDto {
     @ApiProperty({
         description: "Whether the user has a premium account",
         example: true,
-        required: false // majburiy emasligini bildiradi
+        required: false 
     })
     @IsBoolean()
     @IsOptional() 
@@ -32,7 +32,7 @@ export class CreateUserDto {
     @ApiProperty({
         description: "Last login date of the user",
         example: "2023-10-12T07:20:50.52Z",
-        required: false // majburiy emasligini bildiradi
+        required: false 
     })
     @IsDate()
     @IsOptional() 
@@ -40,7 +40,7 @@ export class CreateUserDto {
 
     @ApiProperty({
         description: "User's role in the system",
-        example: UserRoles.USER, // Enum qiymatidan foydalaniladi
+        example: UserRoles.USER,
         enum: UserRoles,
         required: false
     })

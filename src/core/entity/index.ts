@@ -1,13 +1,10 @@
-export { GenreEntity } from './genre.entity';
-export { Movie } from './movie.entity';
-export { MovieGenre } from './movie_genre.entity';
-export { Actor } from './actor.entity';
-export { MovieActor } from './movie_actor.entity';
-export { Review } from './review.entity';
-export {FavouriteMovie} from "./favourite_movie.entity"
-export {MovieEntity} from "./movie.entity";
 export * from './actor.entity'
-// export {MovieGenre} from "./movie_genre.entity"
-
-// export {MovieActor} from "./movie_actor.entity"
+export * from './device.entity'
+export * from './favorite_movie.entity'
+export * from './file.entity'
+export * from './genre.entity'
+export * from './movie.entity'
+export * from './review.entity'
+export * from './user.entity'
+export * from './watched_movie.entity'
 

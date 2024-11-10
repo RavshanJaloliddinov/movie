@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ActorEntity } from 'src/core/entity/actor.entity';
-import { MovieEntity } from 'src/core/entity/movie.entity';
-import { Repository } from 'typeorm';
+import { ActorEntity, MovieEntity } from 'src/core/entity';
+import { ActorRepository, MovieRepository } from 'src/core/repository';
 
 @Injectable()
 export class ActorService {
   constructor(
     @InjectRepository(ActorEntity)
-    private readonly actorRepository: Repository<ActorEntity>,
+    private readonly actorRepository: ActorRepository, 
     @InjectRepository(MovieEntity)
-    private readonly movieRepository: Repository<MovieEntity>,
+    private readonly movieRepository: MovieRepository,
   ) {}
 
   async createActor(name: string, biography: string): Promise<ActorEntity> {
