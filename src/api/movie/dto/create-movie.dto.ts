@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMovieDto {
   @ApiProperty({
-    description: 'Title of the movie',
+    description: 'Filmning sarlavhasi',
     example: 'Inception',
     required: false,
   })
@@ -12,7 +12,7 @@ export class CreateMovieDto {
   title?: string;
 
   @ApiProperty({
-    description: 'Video file of the movie',
+    description: 'Filmning video fayli',
     type: 'string',
     format: 'binary',
     example: 'movie.mp4',
@@ -22,7 +22,7 @@ export class CreateMovieDto {
   video?: Express.Multer.File;
 
   @ApiProperty({
-    description: 'Rating of the movie',
+    description: 'Filmning reytingi',
     example: 8.8,
     required: false,
   })
@@ -31,7 +31,7 @@ export class CreateMovieDto {
   rating?: number;
 
   @ApiProperty({
-    description: 'Release date of the movie',
+    description: 'Filmning chiqish sanasi',
     example: '2010-07-16T00:00:00.000Z',
     required: false,
   })
@@ -40,7 +40,7 @@ export class CreateMovieDto {
   release_date?: Date;
 
   @ApiProperty({
-    description: 'Is the movie a premium movie?',
+    description: 'Film premiummi?',
     example: true,
     required: false,
   })
@@ -49,8 +49,8 @@ export class CreateMovieDto {
   is_premium?: boolean;
 
   @ApiProperty({
-    description: 'Description of the movie',
-    example: 'A skilled thief is given a chance at redemption if he can successfully perform an inception: planting an idea into a target\'s subconscious.',
+    description: "Filmning ta'rifi",
+    example: 'Skilled thief, redemption opportunity through inception.',
     required: false,
   })
   @IsString()

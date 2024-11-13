@@ -30,7 +30,7 @@ export class MovieService {
   async create(createMovieDto: CreateMovieDto) {
     try {
       // Upload video file using the UploadService
-      console.log(1)
+
       const uploadedFile = await this.uploadService.uploadFile({
         file: createMovieDto.video,
         destination: 'uploads/videos', // Specify the directory to save the video

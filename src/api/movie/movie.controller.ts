@@ -20,7 +20,7 @@ import { Roles } from '../auth/roles/RolesDecorator';
 import { UserRoles } from 'src/common/database/Enums';
 
 @ApiTags('Movies')
-@ApiBearerAuth('auth')
+// @ApiBearerAuth('auth')
 @Controller('/movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) { }
@@ -36,13 +36,13 @@ export class MovieController {
     description: 'The movie has been successfully created.',
     type: MovieEntity,
   })
-  @UseInterceptors(FileInterceptor('video')) // 'video' - fayl formda qanday nomlanayotgan bo'lsa
+  @UseInterceptors(FileInterceptor('video')) 
   async create(
     @Body() createMovieDto: CreateMovieDto,
-    @UploadedFile() videoff: Express.Multer.File, // Videoff faylni olish
+    @UploadedFile() video: Express.Multer.File, // Video faylni olish
   ) {
-    console.log(videoff.filename, videoff.originalname)
-    return await this.movieService.create({ ...createMovieDto, video: videoff });
+    console.log(video.filename, video.originalname)
+    return await this.movieService.create({ ...createMovieDto, video });
   }
 
   @Get('/all')
