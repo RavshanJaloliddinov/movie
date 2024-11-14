@@ -3,12 +3,15 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { config } from 'src/config';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-
+import * as compression from 'compression';
 
 export default class Application {
   public static async main(): Promise<void> {
     const app = await NestFactory.create(AppModule);
 
+
+    // COMPRESSION
+    app.use(compression())
 
     app.setGlobalPrefix("api/v1");
     app.useGlobalPipes(new ValidationPipe())
@@ -18,13 +21,13 @@ export default class Application {
       .setDescription('movie site for watching films')
       .setVersion('1.0')
       .addBearerAuth(
-        { 
+        {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT' 
+          bearerFormat: 'JWT'
         },
-        'auth', 
-      )      
+        'auth',
+      )
       .build()
     const documentFactory = () => SwaggerModule.createDocument(app, swaggerConfig)
     SwaggerModule.setup('api', app, documentFactory)

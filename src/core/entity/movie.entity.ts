@@ -36,7 +36,7 @@ export class MovieEntity extends BaseEntity {
   favoriteMovie?: FavoriteMovieEntity;
 
   @ManyToMany(() => ActorEntity, (actor) => actor.movies, { nullable: true })
-  actors?: ActorEntity[];а
+  actors?: ActorEntity[];
 
 
   // @ManyToOne(() => UserEntity, user => user.favoriteMovies)

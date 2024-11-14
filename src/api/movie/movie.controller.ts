@@ -10,6 +10,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { Express } from 'express'
 import { MovieService } from './movie.service';
 import { CreateMovieDto, UpdateMovieDto } from './dto';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -29,13 +30,13 @@ export class MovieController {
   @Post('/add')
   // @Protected(true)
   // @Roles([UserRoles.ADMIN])
-  @ApiOperation({ summary: 'Create a new movie' })
+  // @ApiOperation({ summary: 'Create a new movie' })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({
-    status: 201,
-    description: 'The movie has been successfully created.',
-    type: MovieEntity,
-  })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'The movie has been successfully created.',
+  //   type: MovieEntity,
+  // })
   @UseInterceptors(FileInterceptor('video')) 
   async create(
     @Body() createMovieDto: CreateMovieDto,
@@ -43,11 +44,11 @@ export class MovieController {
   ) {
     console.log(video.filename, video.originalname)
     return await this.movieService.create({ ...createMovieDto, video });
-  }
+  } 
 
   @Get('/all')
-  @Protected(true)
-  @Roles([UserRoles.ADMIN])
+  // @Protected(true)
+  // @Roles([UserRoles.ADMIN])
   @ApiOperation({ summary: 'Get all movies' })
   @ApiResponse({
     status: 200,

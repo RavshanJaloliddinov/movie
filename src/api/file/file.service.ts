@@ -1,64 +1,70 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from "@nestjs/common";
 import * as fs from 'fs/promises';
-import * as path from "path";
+import * as path from 'path';
+import { Injectable } from '@nestjs/common';
+import { existsSync } from 'fs';
 import { RemoveFileRequest, RemoveFileResponse, UploadFileRequest, UploadFileResponse } from './interfaces/interface';
 
 @Injectable()
 export class UploadService {
-    constructor() { }
+  constructor() {}
 
-    async uploadFile(payload: UploadFileRequest): Promise<UploadFileResponse> {
-        const allowedExtensions = ['.mp4', '.MOV'];
-        console.log(payload.file)
-        const extName = path.extname(payload.file.originalname).toLowerCase();
+  async uploadFile(payload: UploadFileRequest): Promise<UploadFileResponse> {
+    try {
+      // GENERATE UNIQUE FILE NAME
+      const extName = path.extname(payload.file.originalname);
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      const fileName = payload.file.fieldname + '-' + uniqueSuffix + extName;
 
-        if (!allowedExtensions.includes(extName)) {
-            throw new HttpException('Fayl formati noto\'g\'ri, faqat mp4 fayllar qo\'yish mumkin', HttpStatus.BAD_REQUEST);
-        }
+      // GET FILE'S FULL PATH
+      const fullFilePath = path.join(
+        __dirname,
+        '../../../',
+        payload.destination,
+        fileName,
+      );
 
-        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        const fileName = `${payload.file.fieldname}-${uniqueSuffix}${extName}`;
-        const fullFilePath = path.join(__dirname, '../../../', payload.destination, fileName);
+      const isFileFolderExists = existsSync(
+        path.join(__dirname, '../../../', payload.destination),
+      );
 
-        try {
-            const destinationDir = path.join(__dirname, '../../../', payload.destination);
+      // CREATE UPLOAD FOLDER IF DESTINATION IS NOT FOUND
+      if (!isFileFolderExists) {
+        await fs.mkdir(path.join(__dirname, '../../../', payload.destination), { recursive: true });
+      }
 
-            try {
-                await fs.access(destinationDir);
-            } catch {
-                await fs.mkdir(destinationDir, { recursive: true });
-            }
+      // WRITE FILE TO DESTINATION
+      await fs.writeFile(fullFilePath, payload.file.buffer);
 
-            await fs.writeFile(fullFilePath, payload.file.buffer);
+      // CREATE IMAGE URL
+      const imageUrl = `${payload.destination}/${fileName}`;
 
-            const fileUrl = `${payload.destination}/${fileName}`;
-            return {
-                file: fileUrl,
-                message: "Fayl muvaffaqiyatli yuklandi",
-            };
-        } catch (error) {
-            console.log(error)
-            throw new HttpException(`Fayl yuklashda xatolik: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+      return {
+        imageUrl,
+        message: 'File written successfully',
+      };
+    } catch (error) {
+      throw new Error('File upload failed: ' + error.message);
     }
+  }
 
-    async removeFile(payload: RemoveFileRequest): Promise<RemoveFileResponse> {
-        // Faylning to'liq yo'lini olish
-        const filePath = path.join(__dirname, '../../../', payload.fileName);
+  async removeFile(payload: RemoveFileRequest): Promise<RemoveFileResponse> {
+    try {
+      const filePath = path.join(__dirname, '../../../', payload.fileName);
 
-        try {
-            // Fayl mavjudligini tekshirish
-            await fs.access(filePath);
-            // Faylni o'chirish
-            await fs.unlink(filePath);
+      const isFileExists = existsSync(filePath);
 
-            // Muvaffaqiyatli o'chirish haqida xabar
-            return {
-                message: 'Fayl muvaffaqiyatli o\'chirildi',
-            };
-        } catch (error) {
-            // O'chirishda xatolik
-            throw new InternalServerErrorException(`Faylni o'chirishda xatolik: ${error.message}`);
-        }
+      // REMOVE FILE IF EXISTS
+      if (isFileExists) {
+        await fs.unlink(filePath);
+      } else {
+        throw new Error('File not found');
+      }
+
+      return {
+        message: 'File removed successfully',
+      };
+    } catch (error) {
+      throw new Error('File removal failed: ' + error.message);
     }
+  }
 }

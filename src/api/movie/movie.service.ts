@@ -38,7 +38,7 @@ export class MovieService {
 
 
       const newMovie = this.movieRepo.create({
-        video: uploadedFile.file,  // Save the file URL to the 'video' field
+        video: uploadedFile.imageUrl,  // Save the file URL to the 'video' field
         rating: createMovieDto.rating,
         title: createMovieDto.title,
         description: createMovieDto.description,

@@ -13,5 +13,5 @@ export declare interface UploadFileRequest {
 
 export declare interface UploadFileResponse {
     message: string;
-    file: string;
-}   
+    imageUrl: string;
+}  
