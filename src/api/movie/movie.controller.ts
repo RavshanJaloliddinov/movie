@@ -163,3 +163,4 @@ export class MovieController {
     return this.movieService.removeActorFromMovie(movieId, actorId);
   }
 }
+  
